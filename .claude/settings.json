@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter analyze *)",
+      "Bash(dart format *)",
+      "PowerShell(flutter pub get)",
+      "PowerShell(flutter analyze)",
+      "PowerShell(flutter devices)",
+      "PowerShell(flutter build apk --debug 2>&1)",
+      "PowerShell(flutter analyze 2>&1)",
+      "Bash(find . -maxdepth 2 -not -path '*/\\\\.*')",
+      "Skill(artifact-design)",
+      "Skill(artifact-design:*)",
+      "Bash(flutter build *)",
+      "Bash(flutter test *)",
+      "Bash(echo \"EXIT:$?\")"
+    ]
+  }
+}
