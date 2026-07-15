@@ -1,4 +1,4 @@
-//base api config shared by every feature's remote data source, each data source appends its own path to baseUrl
+//base api config (shared)
 class ApiConstants {
   ApiConstants._();
 
