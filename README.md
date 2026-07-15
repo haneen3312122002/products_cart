@@ -61,8 +61,6 @@ lib/
 
 ### Dev Tools
 - **[build_runner](https://pub.dev/packages/build_runner)** (`^2.15.1`) — runs code generation for freezed.
-- **[flutter_lints](https://pub.dev/packages/flutter_lints)** (`^6.0.0`) — recommended lint rules.
-
 ## Features
 
 - 🛍️ **Product listing** — browse products and view product details, fetched from FakeStore API.
