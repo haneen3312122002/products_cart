@@ -1,98 +1,89 @@
 # Products Cart
 
-تطبيق Flutter للتسوق الإلكتروني يعرض منتجات من API خارجي، مع دعم السلة (Cart) والمفضلة (Favorites) والتخزين المحلي، مبني على Clean Architecture.
+A Flutter e-commerce app that displays products from an external API, with cart and favorites support backed by local storage, built on Clean Architecture.
 
-## المعمارية (Architecture)
+## Architecture
 
-المشروع مبني على **Clean Architecture** مقسم إلى Features، وكل Feature مقسم إلى 3 طبقات:
+The project follows **Clean Architecture**, split into features, each divided into 3 layers:
 
-- **Domain** — Entities, Repositories (abstract), Usecases — منطق العمل الصافي بدون أي اعتماد خارجي.
-- **Data** — Models, Data Sources (Local/Remote), Repository implementations — تنفيذ فعلي لجلب وتخزين البيانات.
-- **Presentation** — Cubit/State (BLoC), Screens, Widgets — واجهة المستخدم وإدارة الحالة.
+- **Domain** — Entities, Repositories (abstract), Usecases — pure business logic with no external dependencies.
+- **Data** — Models, Data Sources (Local/Remote), Repository implementations — actual data fetching and storage.
+- **Presentation** — Cubit/State (BLoC), Screens, Widgets — UI and state management.
 
 ```
 lib/
-├── app/                  # نقطة تجميع الشاشات (Root Screen)
-├── core/                 # كود مشترك بين كل الـ Features
+├── app/                  # Root screen entry point
+├── core/                 # Code shared across all features
 │   ├── constants/
-│   ├── database/         # إعداد قاعدة بيانات SQLite
-│   ├── di/               # حاوية حقن الاعتماديات (get_it)
+│   ├── database/         # SQLite database setup
+│   ├── di/               # Dependency injection container (get_it)
 │   ├── error/             # Exceptions / Failures
-│   ├── network/           # إعداد Dio + فحص الاتصال
+│   ├── network/           # Dio setup + connectivity check
 │   ├── theme/
 │   ├── usecase/
 │   └── widgets/
 └── features/
-    ├── product/          # عرض المنتجات وتفاصيلها
-    ├── cart/             # سلة المشتريات
-    └── favorite/         # المفضلة
+    ├── product/          # Product listing and details
+    ├── cart/             # Shopping cart
+    └── favorite/         # Favorites
 ```
 
-## التقنيات والمكتبات المستخدمة (Tech Stack)
+## Tech Stack
 
-### الأساسيات
-- **[Flutter](https://flutter.dev)** — إطار العمل الأساسي لبناء التطبيق (SDK ^3.11.5).
-- **[Dart](https://dart.dev)** — لغة البرمجة.
+### Core
+- **[Flutter](https://flutter.dev)** — application framework (SDK ^3.11.5).
+- **[Dart](https://dart.dev)** — programming language.
 
-### إدارة الحالة (State Management)
-- **[flutter_bloc](https://pub.dev/packages/flutter_bloc)** (`^9.0.0`) — نمط Cubit/BLoC لإدارة حالة كل Feature.
-- **[equatable](https://pub.dev/packages/equatable)** (`^2.0.5`) — لمقارنة الكائنات (Value Equality) في الـ States والـ Entities.
-- **[freezed_annotation](https://pub.dev/packages/freezed_annotation)** / **[freezed](https://pub.dev/packages/freezed)** (`^3.x`) — توليد كلاسات الـ States بشكل immutable باستخدام Code Generation.
+### State Management
+- **[flutter_bloc](https://pub.dev/packages/flutter_bloc)** (`^9.0.0`) — Cubit/BLoC pattern for managing state per feature.
+- **[equatable](https://pub.dev/packages/equatable)** (`^2.0.5`) — value equality for states and entities.
+- **[freezed_annotation](https://pub.dev/packages/freezed_annotation)** / **[freezed](https://pub.dev/packages/freezed)** (`^3.x`) — code-generated immutable state classes.
 
-### حقن الاعتماديات (Dependency Injection)
-- **[get_it](https://pub.dev/packages/get_it)** (`^8.0.3`) — Service Locator لإدارة وحقن الاعتماديات (Repositories, Data Sources, Cubits...).
+### Dependency Injection
+- **[get_it](https://pub.dev/packages/get_it)** (`^8.0.3`) — service locator for repositories, data sources, and cubits.
 
-### الشبكة (Networking)
-- **[dio](https://pub.dev/packages/dio)** (`^5.7.0`) — عميل HTTP للتواصل مع الـ API.
-- **API خارجي**: [FakeStore API](https://fakestoreapi.com) — مصدر بيانات المنتجات.
-- **[connectivity_plus](https://pub.dev/packages/connectivity_plus)** (`^7.2.0`) — للتحقق من توفر اتصال الإنترنت قبل تنفيذ الطلبات.
+### Networking
+- **[dio](https://pub.dev/packages/dio)** (`^5.7.0`) — HTTP client for API calls.
+- **API**: [FakeStore API](https://fakestoreapi.com) — product data source.
+- **[connectivity_plus](https://pub.dev/packages/connectivity_plus)** (`^7.2.0`) — checks network availability before making requests.
 
-### معالجة الأخطاء الوظيفية (Functional Error Handling)
-- **[dartz](https://pub.dev/packages/dartz)** (`^0.10.1`) — استخدام `Either<Failure, Success>` بدلاً من رمي الاستثناءات، لتدفق أخطاء واضح عبر طبقات Domain/Data.
+### Functional Error Handling
+- **[dartz](https://pub.dev/packages/dartz)** (`^0.10.1`) — `Either<Failure, Success>` instead of throwing exceptions, for explicit error flow across Domain/Data layers.
 
-### التخزين المحلي (Local Persistence)
-- **[sqflite](https://pub.dev/packages/sqflite)** (`^2.4.1`) — قاعدة بيانات SQLite لتخزين عناصر السلة والمفضلة محلياً.
-- **[path](https://pub.dev/packages/path)** (`^1.9.0`) — لبناء مسارات ملفات قاعدة البيانات.
-- **[shared_preferences](https://pub.dev/packages/shared_preferences)** (`^2.3.4`) — لتخزين إعدادات/بيانات بسيطة (key-value).
+### Local Persistence
+- **[sqflite](https://pub.dev/packages/sqflite)** (`^2.4.1`) — SQLite database for storing cart items.
+- **[path](https://pub.dev/packages/path)** (`^1.9.0`) — building database file paths.
+- **[shared_preferences](https://pub.dev/packages/shared_preferences)** (`^2.3.4`) — key-value storage for favorites.
 
-### واجهة المستخدم (UI)
-- **[flutter_screenutil](https://pub.dev/packages/flutter_screenutil)** (`^5.9.3`) — لتصميم واجهات متجاوبة (Responsive) عبر أحجام الشاشات المختلفة.
-- **[cupertino_icons](https://pub.dev/packages/cupertino_icons)** — أيقونات بنمط iOS.
-- Material Design (عبر `AppTheme` المخصص).
+### UI
+- **[flutter_screenutil](https://pub.dev/packages/flutter_screenutil)** (`^5.9.3`) — responsive UI scaling across screen sizes.
+- Material Design (via a custom `AppTheme`).
 
-### الاختبارات (Testing)
-- **[flutter_test](https://docs.flutter.dev/testing)** — إطار الاختبار الأساسي في Flutter.
-- **[bloc_test](https://pub.dev/packages/bloc_test)** (`^10.0.0`) — لاختبار الـ Cubits/BLoCs.
-- **[mocktail](https://pub.dev/packages/mocktail)** (`^1.0.4`) — لعمل Mock للاعتماديات دون الحاجة لـ Code Generation.
+### Dev Tools
+- **[build_runner](https://pub.dev/packages/build_runner)** (`^2.15.1`) — runs code generation for freezed.
+- **[flutter_lints](https://pub.dev/packages/flutter_lints)** (`^6.0.0`) — recommended lint rules.
 
-### أدوات التطوير (Dev Tools)
-- **[build_runner](https://pub.dev/packages/build_runner)** (`^2.15.1`) — لتشغيل توليد الكود (freezed).
-- **[flutter_lints](https://pub.dev/packages/flutter_lints)** (`^6.0.0`) — قواعد Lint موصى بها لكود نظيف.
+## Features
 
-## المزايا (Features)
+- 🛍️ **Product listing** — browse products and view product details, fetched from FakeStore API.
+- 🛒 **Cart** — add/remove products, adjust quantity, persisted locally via SQLite.
+- ❤️ **Favorites** — mark products as favorite, persisted locally.
+- 📶 **Offline awareness** — checks network status before making requests via `connectivity_plus`.
+- 📱 **Responsive UI** — via `flutter_screenutil`.
 
-- 🛍️ **عرض المنتجات** — قائمة منتجات وتفاصيل كل منتج، مجلوبة من FakeStore API.
-- 🛒 **السلة** — إضافة/إزالة منتجات، تعديل الكمية، محفوظة محلياً عبر SQLite.
-- ❤️ **المفضلة** — تعليم المنتجات كمفضلة وحفظها محلياً.
-- 📶 **دعم عدم الاتصال** — فحص حالة الشبكة قبل تنفيذ الطلبات عبر `connectivity_plus`.
-- 📱 **تصميم متجاوب** — عبر `flutter_screenutil`.
-
-## طريقة التشغيل
+## Getting Started
 
 ```bash
-# تثبيت الحزم
+# install dependencies
 flutter pub get
 
-# توليد الكود (freezed) عند الحاجة
+# run code generation (freezed) when needed
 dart run build_runner build --delete-conflicting-outputs
 
-# تشغيل التطبيق
+# run the app
 flutter run
-
-# تشغيل الاختبارات
-flutter test
 ```
 
-## المنصات المدعومة
+## Supported Platforms
 
-يدعم المشروع: **Android, iOS, Web, Windows, macOS, Linux** (عبر بنية Flutter القياسية متعددة المنصات).
+Android, iOS, Web, Windows, macOS, Linux (via Flutter's standard multi-platform structure).
